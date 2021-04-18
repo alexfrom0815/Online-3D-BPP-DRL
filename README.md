@@ -58,7 +58,7 @@ Please check 'user_study/', 'multi_bin/', 'MCTS/' for details.
 
 ## Statement
 ```
-Hang Zhao and Qijin She are co-authors of this project.
+Hang Zhao and Qijin She are co-authors of this repository.
 
 Some codes are modified from opensource project 'pytorch-a2c-ppo-acktr-gail' (https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail)
 ```

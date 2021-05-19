@@ -63,7 +63,10 @@ Hang Zhao and Qijin She are co-authors of this repository.
 Some codes are modified from opensource project 'pytorch-a2c-ppo-acktr-gail' (https://github.com/ikostrikov/pytorch-a2c-ppo-acktr-gail)
 ```
 
-
+## License
+```
+Please do not use it for commercial purposes without authorization
+```
 
 ## Citation
 

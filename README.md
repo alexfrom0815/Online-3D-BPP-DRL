@@ -65,7 +65,7 @@ Some codes are modified from opensource project 'pytorch-a2c-ppo-acktr-gail' (ht
 
 ## License
 ```
-Please do not use it for commercial purposes without authorization.
+Note that this source code is released only for academic use. Please do not use it for commercial purpose without authorization of the authors. The method is being patent protected. For commercial use, please contact Kai Xu (kevin.kai.xu@gmail.com).
 ```
 
 ## Citation

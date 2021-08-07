@@ -73,10 +73,24 @@ Note that this source code is released only for academic use. Please do not use 
 If you are interested, please cite the following paper:
 
 ```shell
-@article{zhao2020online,
-  title={Online 3D Bin Packing with Constrained Deep Reinforcement Learning},
-  author={Zhao, Hang and She, Qijin and Zhu, Chenyang and Yang, Yin and Xu, Kai},
-  journal={arXiv preprint arXiv:2006.14978},
-  year={2020}
+@inproceedings{DBLP:conf/aaai/ZhaoS0Y021,
+  author    = {Hang Zhao and
+               Qijin She and
+               Chenyang Zhu and
+               Yin Yang and
+               Kai Xu},
+  title     = {Online 3D Bin Packing with Constrained Deep Reinforcement Learning},
+  booktitle = {Thirty-Fifth {AAAI} Conference on Artificial Intelligence, {AAAI}
+               2021, Thirty-Third Conference on Innovative Applications of Artificial
+               Intelligence, {IAAI} 2021, The Eleventh Symposium on Educational Advances
+               in Artificial Intelligence, {EAAI} 2021, Virtual Event, February 2-9,
+               2021},
+  pages     = {741--749},
+  publisher = {{AAAI} Press},
+  year      = {2021},
+  url       = {https://ojs.aaai.org/index.php/AAAI/article/view/16155},
+  timestamp = {Wed, 02 Jun 2021 18:09:11 +0200},
+  biburl    = {https://dblp.org/rec/conf/aaai/ZhaoS0Y021.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```

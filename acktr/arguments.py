@@ -10,7 +10,7 @@ def get_args():
         '--enable-rotation', action='store_true', default=False, help='Whether agent can rotate boxes'
     )
     parser.add_argument(
-        '--load-model', action='store_true', default=True, help='whether to use trained model'
+        '--load-model', default=True, help='whether to use trained model'
     )
     parser.add_argument(
         '--load-name', default='default_cut_2.pt', 
@@ -36,6 +36,11 @@ def get_args():
         '--item-seq', default='depen', help='item sequence generators (ignored when testing), depen|sample|md'
     )
     args = parser.parse_args()
+    if args.load_model[0] == 'F':
+        args.load_model = False
+    else:
+        args.load_model = True
+
     assert args.mode in ['train', 'test']
     if args.mode == 'train' and args.load_model:
         print('continue training model \"%s\"'%args.load_name)
@@ -73,4 +78,4 @@ def get_args():
     return args
 
 
-        
+ 

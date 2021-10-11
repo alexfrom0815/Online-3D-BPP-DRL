@@ -1,3 +1,6 @@
+import sys
+if '/opt/ros/kinetic/lib/python2.7/dist-packages' in sys.path:
+    sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import os
 import time
 from collections import deque
@@ -110,7 +113,15 @@ def train_model():
     copyfile('./acktr/algo/acktr_pipeline.py', os.path.join(data_path, 'acktr_pipeline.py'))
 
     if config.algo == 'a2c':
-        raise Exception("Not tuning Yet")
+        agent = algo.ACKTR(actor_critic,
+                       config.value_loss_coef,
+                       config.entropy_coef,
+                       config.invalid_coef,
+                       config.lr,
+                       config.eps,
+                       config.alpha,
+                       config.max_grad_norm
+                           )
     elif config.algo == 'acktr':
         agent = algo.ACKTR(actor_critic,
             config.value_loss_coef,

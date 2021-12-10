@@ -15,6 +15,7 @@ Any contribution is welcome! If you have any recurring problems, please contact 
 To make this project work, there are two things you should do:
 * Install python packages in 'requirements.py' (by 'pip install -r requirements.txt').
 * Register our binpacking environment(envs/Bpp-v0) in your gym (discussed in https://github.com/openai/gym/issues/626).
+* (This code works on Python 3.7)
 ```
 
 ## Run

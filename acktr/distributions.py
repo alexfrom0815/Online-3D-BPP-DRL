@@ -76,7 +76,7 @@ class Categorical(nn.Module):
         inver_mask = ones - mask
 
         lx = F.softmax(x - inver_mask * 14, dim=-1)
-        lx = lx + 1e-12
+        lx = lx + 1e-5
 
         # branch 2
         # choose vaild actions

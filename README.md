@@ -2,6 +2,25 @@
 
 ![teaser](pictures/state_architecture.png)
 
+## News!
+> Hey guys:
+>
+> Thank you very much for your attention to this repo and active discussions on online BPP issues. To be honest, I didn't expect the repo to get attention when I released it and I'm clumsy with project maintenance. The good news is that an updated version of online 3D BPP solver is now being open published, and this work has been accepted by [ICLR 2022](https://iclr.cc/Conferences/2022). 
+>
+> The link to my new work:  [Paper](https://openreview.net/forum?id=bfuGjlCwAq) |   [New Code](https://github.com/alexfrom0815/Online-3D-BPP-PCT)
+>
+> Compared to the previous work, the advantages of this repo are:
+>- [x] Container (bin) and item sizes can be set arbitrarily.
+>- [x] Continuous online 3D-BPP is allowed and the environment is provided.
+>- [x] Algorithms to approximate stability are provided ([see our other work](https://arxiv.org/abs/2108.13680v2))). 
+>- [x] Better performance and the ability to account for more complex constraints.
+>- [x] More adequate heuristic baselines for domain development.
+>- [x] More stable training.
+>- [x] No need to manually register gym anymore.
+>
+>If you are interested in online 3D BPP, I strongly recommend you to take a look. If you think it solves your problem, please star it, thank you very much!
+
+
 ## Introduction
 ```
 This repository contains the implementation of paper [Online 3D Bin Packing with Constrained Deep Reinforcement Learning](https://arxiv.org/pdf/2006.14978.pdf).

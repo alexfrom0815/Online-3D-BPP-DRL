@@ -7,7 +7,11 @@
 >
 > Thank you very much for your attention to this repo and active discussions on online BPP issues. To be honest, I didn't expect the repo to get attention when I released it and I'm clumsy with project maintenance. The good news is that an updated version of online 3D BPP solver is now being open published, and this work has been accepted by [ICLR 2022](https://iclr.cc/Conferences/2022). 
 >
-> The link to my new work:  [Paper: Learning Efficient Online 3D Bin Packing on Packing Configuration Trees](https://openreview.net/forum?id=bfuGjlCwAq) |   [New Code](https://github.com/alexfrom0815/Online-3D-BPP-PCT)
+> The link to my new work:  
+> 
+> [Paper: Learning Efficient Online 3D Bin Packing on Packing Configuration Trees](https://openreview.net/forum?id=bfuGjlCwAq) 
+> 
+> [New Code: Online-3D-BPP-PCT](https://github.com/alexfrom0815/Online-3D-BPP-PCT)
 >
 > Compared to the previous work, the advantages of this repo are:
 >- [x] Container (bin) and item sizes can be set arbitrarily.
@@ -18,7 +22,7 @@
 >- [x] More stable training.
 >- [x] No need to manually register gym anymore.
 >
->If you are interested in online 3D BPP, I strongly recommend you to take a look. If you think it solves your problem, please star it, thank you very much!
+>If you are interested in online 3D BPP, I strongly recommend you to take a look. If you think it solves your problem, **please star it**, thank you very much!
 
 
 ## Introduction

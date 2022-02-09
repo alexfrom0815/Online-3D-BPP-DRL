@@ -22,7 +22,7 @@
 >- [x] More stable training.
 >- [x] No need to manually register gym anymore.
 >
->If you are interested in online 3D BPP, I strongly recommend you to take a look. If you think it solves your problem, **please star it**, thank you very much!
+> #####If you are interested in online 3D BPP, I strongly recommend you to take a look. If you think it useful, **please star it**, thank you very much!
 
 
 ## Introduction

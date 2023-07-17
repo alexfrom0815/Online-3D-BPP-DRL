@@ -5,7 +5,7 @@
 ## Introduction
 > We are committed to continuously promoting the development of 3D packing technology.
 >
-> The following is the function we developed：
+> The following are functions we developed：
 >- [x] Online packing solver [[1](https://github.com/alexfrom0815/Online-3D-BPP-DRL), [2](https://github.com/alexfrom0815/Online-3D-BPP-PCT), [3](https://github.com/alexfrom0815/IR-BPP)]. 
 >- [x] Online packing with lookahead [[1](https://github.com/alexfrom0815/Online-3D-BPP-DRL)].
 >- [x] Packing stability solution [[2](https://github.com/alexfrom0815/Online-3D-BPP-PCT)].

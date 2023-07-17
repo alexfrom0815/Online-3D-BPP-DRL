@@ -2,34 +2,28 @@
 
 ![teaser](pictures/state_architecture.png)
 
-## News!
-> Hey guys:
->
-> Thank you very much for your attention to this repo and active discussions on online BPP issues. The good news is that an updated version of the online 3D BPP solver is now being published, and this work has been accepted by [ICLR 2022](https://iclr.cc/Conferences/2022). 
->
-> The link to my new work:  
-> 
-> [Paper: Learning Efficient Online 3D Bin Packing on Packing Configuration Trees](https://openreview.net/forum?id=bfuGjlCwAq) 
-> 
-> [New Code: Online-3D-BPP-PCT](https://github.com/alexfrom0815/Online-3D-BPP-PCT)
->
-> Compared to the previous work, the advantages of this repo are:
->- [x] Container (bin) and item sizes can be set arbitrarily.
->- [x] Continuous online 3D-BPP is allowed and the environment is provided.
->- [x] Algorithms to approximate stability are provided ([see our other work](https://arxiv.org/abs/2108.13680v2))). 
->- [x] Better performance and the ability to account for more complex constraints.
->- [x] More adequate heuristic baselines for domain development.
->
-> If you are interested in online 3D BPP, I strongly recommend you take a look. If you think it is useful, **please star it**! Thank you very much!
-
-
 ## Introduction
+> We are committed to continuously promoting the development of 3D packing technology.
+>
+> The following is the function we developed：
+>- [x] Online packing solver [1](https://github.com/alexfrom0815/Online-3D-BPP-DRL), [2](https://github.com/alexfrom0815/Online-3D-BPP-PCT), [3](https://github.com/alexfrom0815/IR-BPP). 
+>- [x] Online packing with lookahead [1](https://github.com/alexfrom0815/Online-3D-BPP-DRL).
+>- [x] Packing stability solution [2](https://github.com/alexfrom0815/Online-3D-BPP-PCT).
+>- [x] Packing in continuous domain [2](https://github.com/alexfrom0815/Online-3D-BPP-PCT).
+>- [x] Custom-constrained packing [2](https://github.com/alexfrom0815/Online-3D-BPP-PCT).
+>- [x] Online packing with buffer [3](https://github.com/alexfrom0815/IR-BPP).
+>- [x] Irregular shape packing [3](https://github.com/alexfrom0815/IR-BPP).
+>- [x] Packing with physical constraints  [3](https://github.com/alexfrom0815/IR-BPP).
+>
+> If you are interested in 3D packing, I strongly recommend you take a look. All kinds of questions and communications are welcome! 
+
+
+## Online-3D-BPP-DRL
 
 Video link of our project: [YouTube](https://www.youtube.com/watch?v=hBzZA_21G3M&t=6s), [bilibili](https://www.bilibili.com/video/BV1st4y1H7kU/?vd_source=b1e4277847248c95062cf16ab3b58e73)
 ```
 This repository contains the implementation of the paper [Online 3D Bin Packing with Constrained Deep Reinforcement Learning](https://arxiv.org/pdf/2006.14978.pdf).
 
-Any contribution is welcome! If you have any recurring problems, please contact me at alexfrom0815@gmail.com.
 ```
 
 

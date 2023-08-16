@@ -16,7 +16,7 @@
 >- [x] Packing with physical constraints  [[3](https://github.com/alexfrom0815/IR-BPP)].
 >- [x] Basic tools for rendering, packing shape processing, and simulation scenarios [[4](https://github.com/alexfrom0815/Packing-Tools)].
  
-> If you are interested in 3D packing, I strongly recommend you take a look. All kinds of questions and communications are welcome! 
+> If you are interested in 3D packing, I strongly recommend you take a look. All kinds of questions and potential collaboration are welcome! 
 
 
 ## Online-3D-BPP-DRL

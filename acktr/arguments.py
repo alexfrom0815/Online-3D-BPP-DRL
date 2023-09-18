@@ -27,7 +27,7 @@ def get_args():
         '--bin-size', default=(10, 10, 10), type=tuple, help='the size of bin, (width, length, height)'
     )
     parser.add_argument(
-        '--use-cuda', default=True, action='store_true', help='whether to use cuda'
+        '--use-cuda', action='store_true', default=False, help='whether to use cuda'
     )
     parser.add_argument(
         '--preview', default=1, type=int, help='the item number agent knows (ignored when training)'

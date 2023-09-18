@@ -2,4 +2,5 @@
 *.xml
 .idea/*
 runs/*
-saved_models/*-
+saved_models/*
+log/*

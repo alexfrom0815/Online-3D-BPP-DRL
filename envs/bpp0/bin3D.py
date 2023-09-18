@@ -93,7 +93,10 @@ class PackingGame(gym.Env):
         return action_mask
 
     def step(self, action):
-        idx = action[0]
+        if isinstance(action, np.ndarray) or isinstance(action, list):
+            idx = action[0]
+        else:
+            idx = action
         flag = False
         # check whether rotate the box
         if idx > self.area:

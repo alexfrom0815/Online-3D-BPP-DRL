@@ -2,7 +2,6 @@ import sys
 sys.path.append("..")
 import numpy as np
 import gym
-import config
 from acktr.model_loader import nnModel
 from acktr.utils import check_box, get_possible_position
 from acktr.arguments import get_args
@@ -27,7 +26,7 @@ def decode(env, obs):
 
 def get_action(env, obs, nmodel, past_rewards, evaluations):
     plain, box_size = decode(env, obs)
-    new_plain_size = config.container_size
+    new_plain_size = args.container_size
     psw = slipingWindow(plain, new_plain_size)
     bin_num = (plain.shape[0]*plain.shape[1])/(new_plain_size[0]*new_plain_size[1])
 
@@ -47,7 +46,7 @@ def get_action(env, obs, nmodel, past_rewards, evaluations):
         new_obs[3*aspace:4*aspace] = box_size[2]
 
         value, poss  = nmodel.evaluate(new_obs, False)
-        mask = get_possible_position(new_obs, config.container_size)
+        mask = get_possible_position(new_obs, args.container_size)
         poss = poss * mask
         if np.sum(mask) == len(mask):
             continue
@@ -114,9 +113,9 @@ if __name__ == '__main__':
     args = get_args()
     container_size, data_url = bin_size(20)
     env = gym.make(args.env_name, _adjust_ratio=0, adjust=False,
-                   box_set=config.box_size_set,
+                   box_set=args.box_size_set,
                    container_size=container_size, test=True,
-                   data_name=data_url, data_type=config.data_type)
+                   data_name=data_url, data_type=args.data_type)
     
     ratio = 0.0
     num = 0.0

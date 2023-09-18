@@ -95,6 +95,9 @@ def get_args():
     parser.add_argument(
         '--enable_rotation', action='store_true', default=False,  help='whether agent can rotate box'
     )
+    parser.add_argument(
+        '--data_name', default='cut_2.pt', help=' the name of dataset, check data_dir for details'
+    )
 
     args = parser.parse_args()
 
@@ -102,6 +105,7 @@ def get_args():
     args.bin_size = args.container_size
     args.pallet_size = args.container_size[0]
     args.channel = 4 # channels of CNN: 4 for hmap+next box, 5 for hmap nextbox+truemask
+    args.data_type = args.item_seq
 
     box_range = args.item_size_range
     box_size_set = []

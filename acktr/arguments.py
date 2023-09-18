@@ -102,7 +102,7 @@ def get_args():
         '--load_name', default='default_cut_2.pt', help='default trained model for testing or continuing training'
     )
     parser.add_argument(
-        '--load_name', default='./pretrained_models/', help='directory to load agent logs (default: ./pretrained_models/)'
+        '--load_dir', default='./pretrained_models/', help='directory to load agent logs (default: ./pretrained_models/)'
     )
     parser.add_argument(
         '--save_dir', default='./saved_models/', help='directory to save agent logs (default: ./saved_models/)'

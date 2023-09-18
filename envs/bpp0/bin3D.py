@@ -9,7 +9,7 @@ from .binCreator import RandomBoxCreator, LoadBoxCreator, BoxCreator
 class PackingGame(gym.Env):
     def __init__(self, box_creator=None, container_size = (20, 20, 20),
                  box_set = None, data_name = None, test = False,
-                 data_type = 'depen', enable_rotation=False, **kwags):
+                 data_type = 'cut1', enable_rotation=False, **kwags):
         self.box_creator = box_creator
         self.bin_size = container_size
         self.area = int(self.bin_size[0] * self.bin_size[1])

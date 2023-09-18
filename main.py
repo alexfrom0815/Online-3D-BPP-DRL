@@ -33,7 +33,8 @@ def train_model(args):
     time_now = time.strftime('%Y.%m.%d-%H-%M', time.localtime(time.time()))
 
     env_name = args.env_name
-    torch.cuda.set_device(torch.device(args.device))
+    if args.device != 'cpu':
+        torch.cuda.set_device(torch.device(args.device))
     # set random seed
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -105,7 +106,8 @@ def train_model(args):
             args.value_loss_coef,
             args.entropy_coef,
             args.invalid_coef,
-            acktr=True)
+            acktr=True,
+            args=args)
 
     rollouts = RolloutStorage(args.num_steps,  # forward steps
                               args.num_processes,  # agent processes

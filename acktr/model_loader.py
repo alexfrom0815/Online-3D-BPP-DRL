@@ -13,13 +13,14 @@ class nnModel(object):
         self.olen = args.channel * area
         self.height = args.container_size[2]
         self.device = torch.device(args.device)
-        self._model = self._load_model(url)
+        self._model = self._load_model(url, args)
 
-    def _load_model(self, url):
+
+    def _load_model(self, url, args):
         model_pretrained, ob_rms = torch.load(url)
         observation_space = gym.spaces.Box(low=0.0, high=self.height, shape=(self.olen, ))
         action_space = gym.spaces.Discrete(self.alen)
-        actor_critic = Policy(obs_shape=observation_space.shape, action_space=action_space)
+        actor_critic = Policy(obs_shape=observation_space.shape, action_space=action_space, base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size, 'args': args})
         # print(actor_critic)
 
         load_dict = {k.replace('module.', ''): v for k, v in model_pretrained.items()}

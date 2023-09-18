@@ -23,7 +23,8 @@ class Policy(nn.Module):
                 base = CNNPro
             else:
                 raise NotImplementedError
-
+        print('debug')
+        print(len((obs_shape[0], *base_kwargs)))
         self.base = base(obs_shape[0], **base_kwargs)
         if action_space.__class__.__name__ == "Discrete":
             num_outputs = action_space.n
@@ -106,7 +107,7 @@ class Policy(nn.Module):
 
 
 class NNBase(nn.Module):
-    def __init__(self, recurrent, recurrent_input_size, hidden_size):
+    def __init__(self, recurrent, recurrent_input_size, hidden_size, args):
         super(NNBase, self).__init__()
 
         self._hidden_size = hidden_size
@@ -192,7 +193,7 @@ class NNBase(nn.Module):
 
 class CNNBase(NNBase):
     def __init__(self, num_inputs, recurrent=False, hidden_size=512, args=None):
-        super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size, args)
+        super(CNNBase, self).__init__(recurrent, num_inputs, hidden_size, args)
         self.args = args
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
                                constant_(x, 0), nn.init.calculate_gain('relu'))
@@ -265,7 +266,6 @@ class MLPBase(NNBase):
 
 class CNNPro(NNBase):
     def __init__(self, num_inputs, recurrent=False, hidden_size=256, args = None):
-
         super(CNNPro, self).__init__(recurrent, num_inputs, hidden_size, args)
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.constant_(x, 0), nn.init.calculate_gain('relu'))
         self.args = args

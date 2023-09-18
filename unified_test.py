@@ -3,7 +3,6 @@ from acktr.model_loader import nnModel
 from acktr.reorder import ReorderTree
 import gym
 import copy
-import config
 from gym.envs.registration import register
 from acktr.arguments import get_args
 

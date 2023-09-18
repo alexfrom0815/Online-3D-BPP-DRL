@@ -5,6 +5,7 @@ import gym
 from acktr.model_loader import nnModel
 from acktr.utils import check_box, get_possible_position
 from acktr.arguments import get_args
+from gym.envs.registration import register
 
 def slipingWindow(plain, new_plain_size, stride=10):
     x_np = new_plain_size[0]
@@ -79,7 +80,7 @@ def get_action(env, obs, nmodel, past_rewards, evaluations):
         return max_action, max_adv, max_label
 
 
-def test(env):
+def test(env, args):
     model_url = '../models/default_cut_22.pt'
     nmodel = nnModel(model_url, args)
     obs = env.reset()
@@ -108,7 +109,15 @@ def bin_size(size):
         data_url = '../dataset/15bins_cut_2.pt'
     return container_size, data_url
 
+def registration_envs():
+    register(
+        id='Bpp-v0',                                  # Format should be xxx-v0, xxx-v1
+        entry_point='envs.bpp0:PackingGame',   # Expalined in envs/__init__.py
+    )
+
+
 if __name__ == '__main__':
+    registration_envs()
     times = 100
     args = get_args()
     container_size, data_url = bin_size(20)

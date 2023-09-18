@@ -121,7 +121,7 @@ if __name__ == '__main__':
     times = 100
     args = get_args()
     container_size, data_url = bin_size(20)
-    env = gym.make(args.env_name, _adjust_ratio=0, adjust=False,
+    env = gym.make(args.env_name,
                    box_set=args.box_size_set,
                    container_size=container_size, test=True,
                    data_name=data_url, data_type=args.data_type)

@@ -57,7 +57,7 @@ load_model = False # load model parameters only
 
 # CUDA setting
 cuda_deterministic = False # sets flags for determinism when using CUDA (potentially slow!)
-no_cuda = False # disable CUDA training
+no_cuda = True # disable CUDA training
 import torch
 cuda = not no_cuda and torch.cuda.is_available() # whether to use cuda
 device = 0 # which device to use (default: 0)

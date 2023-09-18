@@ -73,7 +73,6 @@ def registration_envs():
     )
 
 if __name__ == '__main__':
-
     registration_envs()
     config.cases = 100
     config.preview = 1

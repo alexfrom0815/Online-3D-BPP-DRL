@@ -1,9 +1,7 @@
-gym==0.14.0
-pybullet==2.5.3
-torch==1.1.0
-matplotlib==3.0.3
 numpy==1.17.0
-baselines==0.1.5
-roboschool==1.0.49
-tensorboardX==2.0
-dm_control2gym==0.0.2
+torch==1.7.0
+gym==0.14.0
+transforms3d==0.4.1
+tensorboardX==2.6.2.2
+protobuf==3.20.1
+

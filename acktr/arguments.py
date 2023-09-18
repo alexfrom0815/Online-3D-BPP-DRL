@@ -4,21 +4,21 @@ import time
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
     parser.add_argument(
-       '--mode', default='test', help='test trained model or train new model, test | train'
+       '--mode', default='train', help='Test trained model or train new model, test | train'
     )
     parser.add_argument(
         '--enable-rotation', action='store_true', default=False, help='Whether agent can rotate boxes'
     )
     parser.add_argument(
-        '--load-model', default=True, help='whether to use trained model'
+        '--load-model', action='store_true', default=False,  help='Whether to use trained model'
     )
     parser.add_argument(
         '--load-name', default='default_cut_2.pt', 
-        help='the name of trained model, default directory can be change in \'config.py\', you can put new trained model in it'
+        help='The name of trained model, default directory can be change in \'config.py\', you can put new trained model in it'
     )
     parser.add_argument(
         '--data-name', default='cut_2.pt',
-        help='the name of testing dataset, default directory can be change in \'config.py\''
+        help='The name of testing dataset, default directory can be change in \'config.py\''
     )
     parser.add_argument(
         '--item-size-range', default=(2,2,2,5,5,5), type=tuple, help='the item size range, (min_width, min_length, min_height, max_width, max_length, max_height)'
@@ -36,10 +36,6 @@ def get_args():
         '--item-seq', default='depen', help='item sequence generators (ignored when testing), depen|sample|md'
     )
     args = parser.parse_args()
-    if args.load_model[0] == 'F':
-        args.load_model = False
-    else:
-        args.load_model = True
 
     assert args.mode in ['train', 'test']
     if args.mode == 'train' and args.load_model:

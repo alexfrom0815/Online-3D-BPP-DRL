@@ -17,6 +17,7 @@ from acktr.storage import RolloutStorage
 from evaluation import evaluate
 from tensorboardX import SummaryWriter
 from unified_test import unified_test
+from gym.envs.registration import register
 
 def main(args):
     # input arguments about environment
@@ -253,7 +254,15 @@ def train_model():
                      config.num_processes, eval_log_dir, device)
 
 
+def registration_envs():
+    register(
+        id='Bpp-v0',                                  # Format should be xxx-v0, xxx-v1
+        entry_point='envs.bpp0:PackingGame',   # Expalined in envs/__init__.py
+    )
+
+
 if __name__ == "__main__":
+    registration_envs()
     args = get_args()
     main(args)
 

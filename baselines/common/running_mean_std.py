@@ -1,6 +1,6 @@
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
-from baselines.common.tf_util import get_session
+# from baselines.common.tf_util import get_session
 
 class RunningMeanStd(object):
     # https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Parallel_algorithm

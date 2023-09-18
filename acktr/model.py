@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from acktr.distributions import Bernoulli, Categorical, DiagGaussian
 from acktr.utils import init
-import config
 import sys
 sys.path.append('../')
 
@@ -194,7 +193,7 @@ class NNBase(nn.Module):
 class CNNBase(NNBase):
     def __init__(self, num_inputs, recurrent=False, hidden_size=512, args=None):
         super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size, args)
-
+        self.args = args
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
                                constant_(x, 0), nn.init.calculate_gain('relu'))
 
@@ -269,9 +268,9 @@ class CNNPro(NNBase):
 
         super(CNNPro, self).__init__(recurrent, num_inputs, hidden_size, args)
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.constant_(x, 0), nn.init.calculate_gain('relu'))
-
+        self.args = args
         self.share = nn.Sequential(
-            init_(nn.Conv2d(config.channel, 64, 3, stride=1, padding=1)),
+            init_(nn.Conv2d(args.channel, 64, 3, stride=1, padding=1)),
             nn.ReLU(),
             init_(nn.Conv2d(64, 64, 3, stride=1, padding=1)),
             nn.ReLU(),
@@ -309,14 +308,14 @@ class CNNPro(NNBase):
             init_(nn.Conv2d(64, 4, 1, stride=1)),
             nn.ReLU(),
             Flatten(),
-            init_(nn.Linear(4*config.pallet_size*config.pallet_size, hidden_size)),
+            init_(nn.Linear(4*args.pallet_size*args.pallet_size, hidden_size)),
             nn.ReLU(),
         )
         self.critic_linear = init_(nn.Linear(hidden_size, 1))
         self.train()
 
     def forward(self, inputs, rnn_hxs, masks):
-        x = inputs.reshape((-1,config.channel,config.pallet_size,config.pallet_size))
+        x = inputs.reshape((-1,self.args.channel,self.args.pallet_size,self.args.pallet_size))
         assert not self.is_recurrent
         share = self.share(x)
         hidden_critic = self.critic(share)

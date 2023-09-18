@@ -91,9 +91,9 @@ def compare_test(env, args_list, times=5 ,args=None):
 
 if __name__ == '__main__':
     args = get_args()
-    env = gym.make(args.env_name, box_set=config.box_size_set,
+    env = gym.make(args.env_name, box_set=args.box_size_set,
                    container_size=args.container_size, test=True,
-                   data_name="../dataset/cut_2.pt", data_type=config.data_type)
+                   data_name="../dataset/cut_2.pt", data_type=args.data_type)
 
     args_list = list()
     args_list.append([100, None, -1])

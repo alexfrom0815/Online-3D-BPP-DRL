@@ -21,16 +21,10 @@ from gym.envs.registration import register
 
 def main(args):
     # input arguments about environment
-    config.box_size_set = args.item_set
-    config.pallet_size = args.bin_size[0] 
-    config.box_range = args.item_size_range
+    config.pallet_size = args.bin_size[0]
     config.test = (args.mode == 'test')
     config.load_name = args.load_name
     config.data_name = args.data_name
-    config.enable_rotation = args.enable_rotation
-
-    if not config.test:
-        config.data_type = args.item_seq
 
     if config.test:
         test_model(args)
@@ -93,7 +87,7 @@ def train_model(args):
             envs.observation_space.shape, envs.action_space,
             base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size,'args': args})
     print(actor_critic)
-    print("Rotation:", config.enable_rotation)
+    print("Rotation:", args.enable_rotation)
     actor_critic.to(device)
 
     # leave a backup for parameter tuning
@@ -128,13 +122,13 @@ def train_model(args):
                               envs.action_space,
                               actor_critic.recurrent_hidden_state_size,
                               can_give_up=False,
-                              enable_rotation=config.enable_rotation,
+                              enable_rotation=args.enable_rotation,
                               pallet_size=args.container_size[0])
 
     obs = envs.reset()
     location_masks = []
     for observation in obs:
-        if not config.enable_rotation:
+        if not args.enable_rotation:
             box_mask = get_possible_position(observation, args.container_size)
         else:
             box_mask = get_rotation_mask(observation, args.container_size)
@@ -174,7 +168,7 @@ def train_model(args):
                     episode_rewards.append(infos[i]['episode']['r'])
                     episode_ratio.append(infos[i]['ratio'])
             for observation in obs:
-                if not config.enable_rotation:
+                if not args.enable_rotation:
                     box_mask = get_possible_position(observation, args.container_size)
                 else:
                     box_mask = get_rotation_mask(observation, args.container_size)

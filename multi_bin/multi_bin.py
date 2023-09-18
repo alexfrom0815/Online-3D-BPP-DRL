@@ -81,7 +81,7 @@ def get_action(env, obs, nmodel, past_rewards, evaluations):
 
 
 def test(env, args):
-    model_url = '../models/default_cut_22.pt'
+    model_url = '../pretrained_models/default_cut_2.pt'
     nmodel = nnModel(model_url, args)
     obs = env.reset()
     past_rewards = dict()

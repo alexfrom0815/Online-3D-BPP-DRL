@@ -27,7 +27,7 @@ We provide a unified interface in 'main.py'. There are examples of running our p
 For training：
 ```
 Example: Train a new model on sequences generated randomly.
-You can run 'python main.py --mode train --load-model False --use-cuda --item-seq sample'.
+You can run 'python main.py --mode train --load-model False --use-cuda --item-seq rs'.
 It will take about one day to get a model with satisfying performance.
 
 You can run 'python main.py --help' for some information of common parameters.

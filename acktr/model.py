@@ -23,8 +23,6 @@ class Policy(nn.Module):
                 base = CNNPro
             else:
                 raise NotImplementedError
-        print('debug')
-        print(len((obs_shape[0], *base_kwargs)))
         self.base = base(obs_shape[0], **base_kwargs)
         if action_space.__class__.__name__ == "Discrete":
             num_outputs = action_space.n

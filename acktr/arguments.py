@@ -7,6 +7,12 @@ def get_args():
        '--mode', default='train', help='Test trained model or train new model, test | train'
     )
     parser.add_argument(
+       '--env_name', default='Bpp-v0', type=str, help='bin packing environment name'
+    )
+    parser.add_argument(
+       '--container_size', default=10, type=int, help='container size along x, y and z axis'
+    )
+    parser.add_argument(
         '--enable-rotation', action='store_true', default=False, help='Whether agent can rotate boxes'
     )
     parser.add_argument(
@@ -36,7 +42,7 @@ def get_args():
         '--preview', default=1, type=int, help='the item number agent knows (ignored when training)'
     )
     parser.add_argument(
-        '--item-seq', default='depen', help='item sequence generators (ignored when testing), depen|sample|md'
+        '--item-seq', default='cut1', help='item sequence generators (ignored when testing), cut1|cut2|rs'
     )
     parser.add_argument(
         '--algorithm', default='acktr', type=str,  help='algorithm used, acktr|ppo|a2c'
@@ -68,7 +74,13 @@ def get_args():
     parser.add_argument(
         '--num_processes', default=16, type=int,  help='how many training CPU processes to use (default: 16)'
     )
+    parser.add_argument(
+        '--device', default=0, type=int,  help='device id (default: 0)'
+    )
+
     args = parser.parse_args()
+
+    args.device = "cuda:" + str(args.device) if args.use_cuda else "cpu"
 
     assert args.mode in ['train', 'test']
     if args.mode == 'train' and args.load_model:
@@ -81,7 +93,7 @@ def get_args():
         raise Exception('no trained model chosed')
     if args.mode not in ['test', 'train']:
         raise Exception('Unknown option \'%s\''%(args.mode))
-    if args.item_seq not in ['depen', 'md', 'sample']:
+    if args.item_seq not in ['cut1', 'rs', 'cut2']:
         raise Exception('Unsupported generator \'%s\''%(args.item_seq))
     print('the dataset used: ', args.data_name)
     time.sleep(0.5)

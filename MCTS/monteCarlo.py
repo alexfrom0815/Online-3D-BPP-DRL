@@ -10,7 +10,7 @@ def softmax(x):
 
 
 class MCTree(object):
-    def __init__(self, environment, observation, size_seq, search_depth=None, rollout_length=-1, credit=1):
+    def __init__(self, environment, observation, size_seq, nmodel = None, search_depth=None, rollout_length=-1, credit=1):
         self.sim_env = environment
         self.root = PutNode(None, 1.0)
         self.observation = observation
@@ -22,7 +22,7 @@ class MCTree(object):
 
         self.subrt = 0
         self.reached_depth = -1
-
+        self.nmodel = nmodel
         if search_depth is not None:
             self.max_depth = min(search_depth, len(self.known_size_seq)-1)
         else:
@@ -47,7 +47,8 @@ class MCTree(object):
             if not cur_node.is_expanded():
                 #print('expand:',cur_depth)
                 pointer = cur_depth
-                cur_node.expand(box_size_list=self.known_size_seq[pointer:], 
+                cur_node.expand(nmodel= self.nmodel,
+                                box_size_list=self.known_size_seq[pointer:],
                                 rollout_length=self.rollout_length,
                                 credit=self.credit,
                                 observation=obs,

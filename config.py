@@ -3,11 +3,7 @@
     the parameters provided from command line will overwrite some of them
 '''
 
-# important model parameters
-preview = 1 # known item number (default: 1), 1 means 'not lookahead'
-
 # default environment padrameters
-env_name = 'Bpp-v0' # environment to train on
 container_size = (10, 10, 10) # the size of bin(container)
 box_range = (2, 2, 2, 5, 5, 5) # the item size range (x_min, y_min, z_min, x_max, y_max, z_max)
 pallet_size = container_size[0]

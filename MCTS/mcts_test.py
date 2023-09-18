@@ -7,9 +7,11 @@ import time
 import sys 
 sys.path.append("..")
 import config
+from acktr.arguments import get_args
+from acktr.model_loader import nnModel
 
 
-def test(box_size_list, env, obser, simulation_times, search_depth, rollout_length):
+def test(box_size_list, env, obser, simulation_times, search_depth, rollout_length, nmodel, args):
     sim_env = copy.deepcopy(env)
     size_idx = len(box_size_list)
     action_list = []
@@ -17,8 +19,9 @@ def test(box_size_list, env, obser, simulation_times, search_depth, rollout_leng
     box_num = 0
     sum_reward = 0
     print("length: ", size_idx)
-    
-    mctree = MCTree(sim_env, obser, box_size_list, search_depth=search_depth, rollout_length=rollout_length)
+
+
+    mctree = MCTree(sim_env, obser, box_size_list, nmodel = nmodel, search_depth=search_depth, rollout_length=rollout_length)
     while True:
         # show some information
         print(box_size_list[:10])
@@ -61,10 +64,11 @@ def test(box_size_list, env, obser, simulation_times, search_depth, rollout_leng
         # to next node
         mctree.succeed(action, next_box, obser)
 
-def compare_test(env, args_list, times=5):
+def compare_test(env, args_list, times=5 ,args=None):
     result = dict()
     case_num = len(args_list)
     print("Case number: %d"%times)
+    nmodel = nnModel('../pretrained_models/default_cut_2.pt', config, args.device)
     for i in range(times):
         print('Case %d' % (i+1))
         obser = env.reset()
@@ -76,7 +80,7 @@ def compare_test(env, args_list, times=5):
             arg = args_list[j]
             print(arg)
             start = time.time()
-            ratio, counter, reward = test(next_box_size_list[:4], env, obser, *arg)
+            ratio, counter, reward = test(next_box_size_list[:4], env, obser, *arg, nmodel, args)
             end = time.time()
             result[j].append([ratio, counter, reward, end-start])
         print('//////////////////////////////////////////////////')
@@ -86,15 +90,14 @@ def compare_test(env, args_list, times=5):
 
 
 if __name__ == '__main__':
-    env = gym.make(config.env_name, _adjust_ratio=0, adjust=False, box_set=config.box_size_set,
+    args = get_args()
+    env = gym.make(args.env_name, box_set=config.box_size_set,
                    container_size=config.container_size, test=True,
                    data_name="../dataset/cut_2.pt", data_type=config.data_type)
+
     args_list = list()
-    # args_list.append([1,0,0])
-    # args_list.append([400, 1, -1])
-    # args_list.append([400, None, -1])
     args_list.append([100, None, -1])
-    result = compare_test(env, args_list, 100)
+    result = compare_test(env, args_list, 100, args)
     for (key, value) in result.items():
         print(value[:, 0])
         print(value[:, 1])

@@ -7,12 +7,12 @@ from acktr.utils import get_rotation_mask, get_possible_position
 
 
 class nnModel(object):
-    def __init__(self, url, config):
+    def __init__(self, url, config, device):
         area = config.container_size[0]*config.container_size[1]
         self.alen = area * (1+config.enable_rotation)
         self.olen = config.channel * area
         self.height = config.container_size[2]
-        self.device = torch.device("cuda:" + str(config.device) if config.cuda else "cpu")
+        self.device = torch.device(device)
         self._model = self._load_model(url)
 
     def _load_model(self, url):

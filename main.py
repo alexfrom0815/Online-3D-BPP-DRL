@@ -26,7 +26,6 @@ def main(args):
     config.pallet_size = args.bin_size[0] 
     config.box_range = args.item_size_range
     config.test = (args.mode == 'test')
-    config.preview = args.preview
     config.load_name = args.load_name
     config.data_name = args.data_name
     config.pretrain = args.load_model
@@ -36,20 +35,20 @@ def main(args):
         config.data_type = args.item_seq
 
     if config.test:
-        test_model()
+        test_model(args)
     else:
-        train_model()
+        train_model(args)
 
-def test_model():
+def test_model(args):
     assert config.test is True
     model_url = config.load_dir + config.load_name
     unified_test(model_url, config)
 
-def train_model():
+def train_model(args):
     custom = input('please input the test name: ')
     time_now = time.strftime('%Y.%m.%d-%H-%M', time.localtime(time.time()))
 
-    env_name = config.env_name
+    env_name = args.env_name
     torch.cuda.set_device(config.device)
     # set random seed
     torch.manual_seed(config.seed)
@@ -78,7 +77,7 @@ def train_model():
     utils.cleanup_log_dir(eval_log_dir)
 
     torch.set_num_threads(1)
-    device = torch.device("cuda:" + str(config.device) if args.use_cuda else "cpu")
+    device = torch.device(args.device)
     envs = make_vec_envs(env_name, config.seed, args.num_processes, args.gamma, config.log_dir, device, False)
 
     if config.pretrain:

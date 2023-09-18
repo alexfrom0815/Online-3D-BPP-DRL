@@ -5,6 +5,7 @@ import gym
 import copy
 import config
 from gym.envs.registration import register
+from acktr.arguments import get_args
 
 def run_sequence(nmodel, raw_env, preview_num, c_bound):
     env = copy.deepcopy(raw_env)
@@ -26,21 +27,21 @@ def run_sequence(nmodel, raw_env, preview_num, c_bound):
         box_counter += 1
         default_counter += int(default)
 
-def unified_test(url, config, pruning_threshold):
-    nmodel = nnModel(url, config)
+def unified_test(url, config, args, pruning_threshold):
+    nmodel = nnModel(url, config, args.device)
     data_url = config.data_dir+config.data_name
-    env = gym.make(config.env_name, _adjust_ratio=0, adjust=False,
+    env = gym.make(args.env_name,
                     box_set=config.box_size_set,
                     container_size=config.container_size,
                     test=True, data_name=data_url,
                     enable_rotation=config.enable_rotation,
                     data_type=config.data_type)
-    print('Env name: ', config.env_name)
+    print('Env name: ', args.env_name)
     print('Data url: ', data_url)
     print('Model url: ', url)
     print('Case number: ', config.cases)
-    print('pruning threshold: ', config.pruning_threshold)
-    print('Known item number: ', config.preview)
+    print('pruning threshold: ', pruning_threshold)
+    print('Known item number: ', args.preview)
     times = config.cases
     ratios = []
     avg_ratio, avg_counter, avg_time, avg_drate = 0.0, 0.0, 0.0, 0.0
@@ -50,7 +51,7 @@ def unified_test(url, config, pruning_threshold):
             print('case', i+1)
         env.reset()
         env.box_creator.preview(500)
-        ratio, counter, time, depen_rate = run_sequence(nmodel, env, config.preview, c_bound)
+        ratio, counter, time, depen_rate = run_sequence(nmodel, env, args.preview, c_bound)
         avg_ratio += ratio
         ratios.append(ratio)
         avg_counter += counter
@@ -74,11 +75,11 @@ def registration_envs():
 
 if __name__ == '__main__':
     registration_envs()
+    args = get_args()
     pruning_threshold = 0.5  # pruning_threshold (default: 0.5)
-    config.cases = 100
-    config.preview = 1
-    unified_test('pretrained_models/default_cut_2.pt', config, pruning_threshold)
+    args.cases = 100
+    unified_test('pretrained_models/default_cut_2.pt', config, args, pruning_threshold)
     # config.enable_rotation = True
-    # unified_test('pretrained_models/rotation_cut_2.pt', config)
+    # unified_test('pretrained_models/rotation_cut_2.pt', config, args, pruning_threshold)
 
     

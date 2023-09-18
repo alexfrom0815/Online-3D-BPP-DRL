@@ -5,6 +5,7 @@ import gym
 import config
 from acktr.model_loader import nnModel
 from acktr.utils import check_box, get_possible_position
+from acktr.arguments import get_args
 
 def slipingWindow(plain, new_plain_size, stride=10):
     x_np = new_plain_size[0]
@@ -81,7 +82,7 @@ def get_action(env, obs, nmodel, past_rewards, evaluations):
 
 def test(env):
     model_url = '../models/default_cut_22.pt'
-    nmodel = nnModel(model_url, config)
+    nmodel = nnModel(model_url, config, args.device)
     obs = env.reset()
     past_rewards = dict()
     evaluations = dict()
@@ -110,8 +111,9 @@ def bin_size(size):
 
 if __name__ == '__main__':
     times = 100
+    args = get_args()
     container_size, data_url = bin_size(20)
-    env = gym.make(config.env_name, _adjust_ratio=0, adjust=False, 
+    env = gym.make(args.env_name, _adjust_ratio=0, adjust=False,
                    box_set=config.box_size_set,
                    container_size=container_size, test=True,
                    data_name=data_url, data_type=config.data_type)
@@ -121,7 +123,7 @@ if __name__ == '__main__':
     for i in range(times):
         if (i+1) % 10==0:
             print("Case", i+1)
-        r,n = test(env)
+        r,n = test(env, args)
         ratio += r
         num += n
     ratio /= times

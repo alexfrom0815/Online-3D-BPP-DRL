@@ -1,6 +1,5 @@
 import numpy as np
 import math, copy, time
-from network import nmodel
 
 
 INF = 1e9+7
@@ -90,7 +89,7 @@ class PutNode(Node):
         super().__init__(prev, p)
         self.q = 0
 
-    def expand(self, **kwargs):
+    def expand(self, nmodel, **kwargs):
 
         credit = kwargs.get('credit')
         rollout_length = kwargs.get('rollout_length')
@@ -134,10 +133,10 @@ class PutNode(Node):
             self.next_nodes[0] = PutNode(self, 1)
 
         if rollout_length >= 1 and len(box_size_list) >= rollout_length + 1:
-            value = self.roll_out(box_size_list[:rollout_length+1], copy.deepcopy(sim_env), observation)
+            value = self.roll_out(box_size_list[:rollout_length+1], copy.deepcopy(sim_env), observation, nmodel)
         self.value = value
 
-    def roll_out(self, box_size_list, sim_env, observation, gamma=1):
+    def roll_out(self, box_size_list, sim_env, observation, nmodel, gamma=1):
         assert box_size_list is not None
         assert sim_env is not None
         assert observation is not None

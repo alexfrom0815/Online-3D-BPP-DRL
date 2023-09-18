@@ -113,7 +113,7 @@ def train_model():
     copyfile('./acktr/model.py', os.path.join(data_path, 'model.py'))
     copyfile('./acktr/algo/acktr_pipeline.py', os.path.join(data_path, 'acktr_pipeline.py'))
 
-    if config.algo == 'a2c':
+    if args.algo == 'a2c':
         agent = algo.ACKTR(actor_critic,
                        config.value_loss_coef,
                        config.entropy_coef,
@@ -123,7 +123,7 @@ def train_model():
                        config.alpha,
                        config.max_grad_norm
                            )
-    elif config.algo == 'acktr':
+    elif args.algo == 'acktr':
         agent = algo.ACKTR(actor_critic,
             config.value_loss_coef,
             config.entropy_coef,
@@ -172,7 +172,7 @@ def train_model():
             # decrease learning rate linearly
             utils.update_linear_schedule(
                 agent.optimizer, j, num_updates,
-                agent.optimizer.lr if config.algo == "acktr" else config.lr)
+                agent.optimizer.lr if args.algo == "acktr" else config.lr)
 
         for step in range(config.num_steps):
             # Sample actions
@@ -225,7 +225,7 @@ def train_model():
             index += 1
             print(
                 "The algorithm is {}, the recurrent policy is {}\nThe env is {}, the version is {}".format(
-                    config.algo, config.recurrent_policy, env_name, custom))
+                    args.algo, config.recurrent_policy, env_name, custom))
             print(
                 "Updates {}, num timesteps {}, FPS {} \n"
                 "Last {} training episodes: mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}\n"

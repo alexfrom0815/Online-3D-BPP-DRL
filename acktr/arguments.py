@@ -35,6 +35,9 @@ def get_args():
     parser.add_argument(
         '--item-seq', default='depen', help='item sequence generators (ignored when testing), depen|sample|md'
     )
+    parser.add_argument(
+        '--algorithm', default='acktr', help='algorithm used, acktr|ppo|a2c'
+    )
     args = parser.parse_args()
 
     assert args.mode in ['train', 'test']

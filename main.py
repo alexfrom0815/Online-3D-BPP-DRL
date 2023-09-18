@@ -1,13 +1,10 @@
 import sys
-if '/opt/ros/kinetic/lib/python2.7/dist-packages' in sys.path:
-    sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import os
 import time
 from collections import deque
 import numpy as np
 import torch
 from shutil import copyfile
-import config
 from acktr import algo, utils
 from acktr.utils import get_possible_position, get_rotation_mask
 from acktr.envs import make_vec_envs
@@ -21,33 +18,28 @@ from gym.envs.registration import register
 
 def main(args):
     # input arguments about environment
-    config.pallet_size = args.bin_size[0]
-    config.test = (args.mode == 'test')
-    config.load_name = args.load_name
-    config.data_name = args.data_name
-
-    if config.test:
+    if args.test:
         test_model(args)
     else:
         train_model(args)
 
 def test_model(args):
-    assert config.test is True
-    model_url = config.load_dir + config.load_name
-    unified_test(model_url, config)
+    assert args.test is True
+    model_url = args.load_dir + args.load_name
+    unified_test(model_url, args)
 
 def train_model(args):
     custom = input('please input the test name: ')
     time_now = time.strftime('%Y.%m.%d-%H-%M', time.localtime(time.time()))
 
     env_name = args.env_name
-    torch.cuda.set_device(config.device)
+    torch.cuda.set_device(torch.device(args.device))
     # set random seed
-    torch.manual_seed(config.seed)
-    torch.cuda.manual_seed_all(config.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
     
-    save_path = config.save_dir
-    load_path = config.load_dir
+    save_path = args.save_dir
+    load_path = args.load_dir
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -67,10 +59,10 @@ def train_model(args):
 
     torch.set_num_threads(1)
     device = torch.device(args.device)
-    envs = make_vec_envs(env_name, config.seed, args.num_processes, args.gamma, log_dir, device, False, args = args)
+    envs = make_vec_envs(env_name, args.seed, args.num_processes, args.gamma, log_dir, device, False, args = args)
 
     if args.pretrain:
-        model_pretrained, ob_rms = torch.load(os.path.join(load_path, config.load_name))
+        model_pretrained, ob_rms = torch.load(os.path.join(load_path, args.load_name))
         actor_critic = Policy(
             envs.observation_space.shape, envs.action_space,
             base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size, 'args': args})
@@ -91,7 +83,6 @@ def train_model(args):
     actor_critic.to(device)
 
     # leave a backup for parameter tuning
-    copyfile('config.py', os.path.join(data_path, 'config.py'))
     copyfile('main.py', os.path.join(data_path, 'main.py'))
     copyfile('./acktr/envs.py', os.path.join(data_path, 'envs.py'))
     copyfile('./acktr/distributions.py', os.path.join(data_path, 'distributions.py'))
@@ -191,7 +182,7 @@ def train_model(args):
 
         rollouts.after_update()
         if args.save_model:
-            if (j % args.save_interval == 0) and config.save_dir != "":
+            if (j % args.save_interval == 0) and args.save_dir != "":
                 torch.save([
                     actor_critic.state_dict(),
                     getattr(utils.get_vec_normalize(envs), 'ob_rms', None)

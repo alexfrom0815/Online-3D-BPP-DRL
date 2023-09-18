@@ -27,9 +27,9 @@ def run_sequence(nmodel, raw_env, preview_num, c_bound):
         box_counter += 1
         default_counter += int(default)
 
-def unified_test(url,  args, pruning_threshold):
+def unified_test(url,  args, pruning_threshold = 0.5):
     nmodel = nnModel(url, args)
-    data_url = './dataset/' +config.data_name
+    data_url = './dataset/' +args.data_name
     env = gym.make(args.env_name,
                     box_set=args.box_size_set,
                     container_size=args.container_size,
@@ -77,8 +77,8 @@ if __name__ == '__main__':
     registration_envs()
     args = get_args()
     pruning_threshold = 0.5  # pruning_threshold (default: 0.5)
-    unified_test('pretrained_models/default_cut_2.pt', config, args, pruning_threshold)
+    unified_test('pretrained_models/default_cut_2.pt', args, pruning_threshold)
     # args.enable_rotation = True
-    # unified_test('pretrained_models/rotation_cut_2.pt', config, args, pruning_threshold)
+    # unified_test('pretrained_models/rotation_cut_2.pt', args, pruning_threshold)
 
     

@@ -98,7 +98,18 @@ def get_args():
     parser.add_argument(
         '--data_name', default='cut_2.pt', help=' the name of dataset, check data_dir for details'
     )
-
+    parser.add_argument(
+        '--load_name', default='default_cut_2.pt', help='default trained model for testing or continuing training'
+    )
+    parser.add_argument(
+        '--load_name', default='./pretrained_models/', help='directory to load agent logs (default: ./pretrained_models/)'
+    )
+    parser.add_argument(
+        '--save_dir', default='./saved_models/', help='directory to save agent logs (default: ./saved_models/)'
+    )
+    parser.add_argument(
+        '--seed', default=1, type=int,  help='random seed (default: 1)'
+    )
     args = parser.parse_args()
 
     args.device = "cuda:" + str(args.device) if args.use_cuda else "cpu"
@@ -106,6 +117,7 @@ def get_args():
     args.pallet_size = args.container_size[0]
     args.channel = 4 # channels of CNN: 4 for hmap+next box, 5 for hmap nextbox+truemask
     args.data_type = args.item_seq
+    args.test = (args.mode == 'test')
 
     box_range = args.item_size_range
     box_size_set = []

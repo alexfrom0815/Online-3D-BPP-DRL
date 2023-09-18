@@ -21,14 +21,12 @@ from gym.envs.registration import register
 
 def main(args):
     # input arguments about environment
-    config.container_size = args.bin_size
     config.box_size_set = args.item_set
     config.pallet_size = args.bin_size[0] 
     config.box_range = args.item_size_range
     config.test = (args.mode == 'test')
     config.load_name = args.load_name
     config.data_name = args.data_name
-    config.pretrain = args.load_model
     config.enable_rotation = args.enable_rotation
 
     if not config.test:
@@ -66,25 +64,22 @@ def train_model(args):
         os.makedirs(data_path)
     except OSError:
         pass
-    
-    if args.use_cuda and torch.cuda.is_available() and config.cuda_deterministic:
-        torch.backends.cudnn.benchmark = False
-        torch.backends.cudnn.deterministic = True
 
-    log_dir = os.path.expanduser(config.log_dir)
+    log_dir = './log'  # directory to save agent logs (default: ./log)
+    log_dir = os.path.expanduser(log_dir)
     eval_log_dir = log_dir + "_eval"
     utils.cleanup_log_dir(log_dir)
     utils.cleanup_log_dir(eval_log_dir)
 
     torch.set_num_threads(1)
     device = torch.device(args.device)
-    envs = make_vec_envs(env_name, config.seed, args.num_processes, args.gamma, config.log_dir, device, False)
+    envs = make_vec_envs(env_name, config.seed, args.num_processes, args.gamma, log_dir, device, False, args = args)
 
-    if config.pretrain:
+    if args.pretrain:
         model_pretrained, ob_rms = torch.load(os.path.join(load_path, config.load_name))
         actor_critic = Policy(
             envs.observation_space.shape, envs.action_space,
-            base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size})
+            base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size, 'args': args})
         load_dict = {k.replace('module.', ''): v for k, v in model_pretrained.items()}
         load_dict = {k.replace('add_bias.', ''): v for k, v in load_dict.items()}
         load_dict = {k.replace('_bias', 'bias'): v for k, v in load_dict.items()}
@@ -96,7 +91,7 @@ def train_model(args):
     else:
         actor_critic = Policy(
             envs.observation_space.shape, envs.action_space,
-            base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size})
+            base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size,'args': args})
     print(actor_critic)
     print("Rotation:", config.enable_rotation)
     actor_critic.to(device)
@@ -127,22 +122,22 @@ def train_model(args):
             args.invalid_coef,
             acktr=True)
 
-    rollouts = RolloutStorage(config.num_steps,  # forward steps
+    rollouts = RolloutStorage(args.num_steps,  # forward steps
                               args.num_processes,  # agent processes
                               envs.observation_space.shape,
                               envs.action_space,
                               actor_critic.recurrent_hidden_state_size,
                               can_give_up=False,
                               enable_rotation=config.enable_rotation,
-                              pallet_size=config.container_size[0])
+                              pallet_size=args.container_size[0])
 
     obs = envs.reset()
     location_masks = []
     for observation in obs:
         if not config.enable_rotation:
-            box_mask = get_possible_position(observation, config.container_size)
+            box_mask = get_possible_position(observation, args.container_size)
         else:
-            box_mask = get_rotation_mask(observation, config.container_size)
+            box_mask = get_rotation_mask(observation, args.container_size)
         location_masks.append(box_mask)
     location_masks = torch.FloatTensor(location_masks).to(device)
 
@@ -154,19 +149,18 @@ def train_model(args):
     episode_ratio = deque(maxlen=10)
 
     start = time.time()
-    num_updates = int(config.num_env_steps) // config.num_steps // args.num_processes
 
-    if not os.path.exists('{}/{}/{}'.format(config.tbx_dir, env_name, custom)):
-        os.makedirs('{}/{}/{}'.format(config.tbx_dir, env_name, custom))
+    tbx_dir = './runs'
+    if not os.path.exists('{}/{}/{}'.format(tbx_dir, env_name, custom)):
+        os.makedirs('{}/{}/{}'.format(tbx_dir, env_name, custom))
     if args.tensorboard:
-        writer = SummaryWriter(logdir='{}/{}/{}'.format(config.tbx_dir, env_name, custom))
+        writer = SummaryWriter(logdir='{}/{}/{}'.format(tbx_dir, env_name, custom))
 
     j = 0
     index = 0
     while True:
         j += 1
-
-        for step in range(config.num_steps):
+        for step in range(args.num_steps):
             # Sample actions
             with torch.no_grad():
                 value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(
@@ -181,9 +175,9 @@ def train_model(args):
                     episode_ratio.append(infos[i]['ratio'])
             for observation in obs:
                 if not config.enable_rotation:
-                    box_mask = get_possible_position(observation, config.container_size)
+                    box_mask = get_possible_position(observation, args.container_size)
                 else:
-                    box_mask = get_rotation_mask(observation, config.container_size)
+                    box_mask = get_rotation_mask(observation, args.container_size)
                 location_masks.append(box_mask)
             location_masks = torch.FloatTensor(location_masks).to(device)
 
@@ -202,17 +196,16 @@ def train_model(args):
         value_loss, action_loss, dist_entropy, prob_loss, graph_loss = agent.update(rollouts)
 
         rollouts.after_update()
-        if config.save_model:
-            if (j % config.save_interval == 0
-                or j == num_updates - 1) and config.save_dir != "":
+        if args.save_model:
+            if (j % args.save_interval == 0) and config.save_dir != "":
                 torch.save([
                     actor_critic.state_dict(),
                     getattr(utils.get_vec_normalize(envs), 'ob_rms', None)
                 ], os.path.join(data_path, env_name + time_now + ".pt"))
 
         # print useful information of training
-        if j % config.log_interval == 0 and len(episode_rewards) > 1:
-            total_num_steps = (j + 1) * args.num_processes * config.num_steps
+        if j % args.log_interval == 0 and len(episode_rewards) > 1:
+            total_num_steps = (j + 1) * args.num_processes * args.num_steps
             end = time.time()
             index += 1
             print(
@@ -238,12 +231,6 @@ def train_model(args):
                 writer.add_scalar("The action loss", action_loss, j)
                 writer.add_scalar('Probability loss', prob_loss, j)
                 writer.add_scalar("Mask loss", graph_loss, j) # add mask loss
-
-        if (config.eval_interval is not None and len(episode_rewards) > 1
-                and j % config.eval_interval == 0):
-            ob_rms = utils.get_vec_normalize(envs).ob_rms
-            evaluate(actor_critic, ob_rms, env_name, config.seed,
-                     args.num_processes, eval_log_dir, device)
 
 
 def registration_envs():

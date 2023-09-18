@@ -12,7 +12,7 @@ from baselines.common.vec_env.vec_normalize import \
     VecNormalize as VecNormalize_
 import sys
 sys.path.append('../')
-import config
+
 try:
     import dm_control2gym
 except ImportError:
@@ -28,7 +28,7 @@ try:
 except ImportError:
     pass
 
-def make_env(env_id, seed, rank, log_dir, allow_early_resets):
+def make_env(env_id, seed, rank, log_dir, allow_early_resets, args):
     def _thunk():
         if env_id.startswith("dm"):
             _, domain, task = env_id.split('.')
@@ -36,9 +36,9 @@ def make_env(env_id, seed, rank, log_dir, allow_early_resets):
         else:
             print()
             env = gym.make(env_id,
-                           enable_rotation = config.enable_rotation,
-                           box_set = config.box_size_set, container_size = config.container_size, test = False,
-                           data_name = None, data_type = config.data_type)
+                           enable_rotation = args.enable_rotation,
+                           box_set = args.box_size_set, container_size = args.container_size, test = False,
+                           data_name = None, data_type = args.data_type)
 
         is_atari = hasattr(gym.envs, 'atari') and isinstance(
             env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
@@ -81,9 +81,10 @@ def make_vec_envs(env_name,
                   log_dir,
                   device,
                   allow_early_resets,
-                  num_frame_stack = None):
+                  num_frame_stack = None,
+                  args = None):
     envs = [
-        make_env(env_name, seed, i, log_dir, allow_early_resets)
+        make_env(env_name, seed, i, log_dir, allow_early_resets, args)
         for i in range(num_processes)
     ]
 
@@ -93,8 +94,8 @@ def make_vec_envs(env_name,
             environment to get it.
         """
         env = gym.make(env_name,
-                       enable_rotation=config.enable_rotation,
-                       box_set=config.box_size_set, container_size=config.container_size, test = False,
+                       enable_rotation=args.enable_rotation,
+                       box_set=args.box_size_set, container_size=args.container_size, test = False,
                        data_name = None)
         spaces = [env.observation_space, env.action_space]
         envs = ShmemVecEnv(envs, spaces, context='fork')

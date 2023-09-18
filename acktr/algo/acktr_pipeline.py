@@ -4,8 +4,6 @@ import torch.optim as optim
 import numpy as np
 from acktr.algo.kfac import KFACOptimizer
 import sys
-sys.path.append('../')
-import config
 
 class ACKTR():
     def __init__(self,
@@ -17,7 +15,8 @@ class ACKTR():
                  eps = None,
                  alpha = None,
                  max_grad_norm = None,
-                 acktr = False):
+                 acktr = False,
+                 args = None):
 
         self.actor_critic = actor_critic
         self.acktr = acktr
@@ -28,6 +27,7 @@ class ACKTR():
 
         self.loss_func = nn.MSELoss(reduce=False, size_average=True)
         self.entropy_coef = entropy_coef
+        self.args = args
 
         if acktr:
             self.optimizer = KFACOptimizer(actor_critic)
@@ -56,8 +56,8 @@ class ACKTR():
         value_loss = advantages.pow(2).mean()
         action_loss = -(advantages.detach() * action_log_probs).mean()
 
-        mask_len = config.container_size[0]*config.container_size[1]
-        mask_len = mask_len * (1+config.enable_rotation)
+        mask_len = self.args.container_size[0]*self.args.container_size[1]
+        mask_len = mask_len * (1+ self.args.enable_rotation)
         pred_mask = pred_mask.reshape((num_steps,num_processes,mask_len))
 
         mask_truth = rollouts.location_masks[0:num_steps] 

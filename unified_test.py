@@ -28,8 +28,8 @@ def run_sequence(nmodel, raw_env, preview_num, c_bound):
         default_counter += int(default)
 
 def unified_test(url, config, args, pruning_threshold):
-    nmodel = nnModel(url, config, args.device)
-    data_url = config.data_dir+config.data_name
+    nmodel = nnModel(url, args)
+    data_url = './dataset/' +config.data_name
     env = gym.make(args.env_name,
                     box_set=config.box_size_set,
                     container_size=config.container_size,
@@ -39,10 +39,10 @@ def unified_test(url, config, args, pruning_threshold):
     print('Env name: ', args.env_name)
     print('Data url: ', data_url)
     print('Model url: ', url)
-    print('Case number: ', config.cases)
+    print('Case number: ', args.cases)
     print('pruning threshold: ', pruning_threshold)
     print('Known item number: ', args.preview)
-    times = config.cases
+    times = args.cases
     ratios = []
     avg_ratio, avg_counter, avg_time, avg_drate = 0.0, 0.0, 0.0, 0.0
     c_bound = pruning_threshold
@@ -77,7 +77,6 @@ if __name__ == '__main__':
     registration_envs()
     args = get_args()
     pruning_threshold = 0.5  # pruning_threshold (default: 0.5)
-    args.cases = 100
     unified_test('pretrained_models/default_cut_2.pt', config, args, pruning_threshold)
     # config.enable_rotation = True
     # unified_test('pretrained_models/rotation_cut_2.pt', config, args, pruning_threshold)

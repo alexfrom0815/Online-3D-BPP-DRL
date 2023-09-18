@@ -10,7 +10,7 @@ def get_args():
        '--env_name', default='Bpp-v0', type=str, help='bin packing environment name'
     )
     parser.add_argument(
-       '--container_size', default=10, type=int, help='container size along x, y and z axis'
+       '--container_size', default=(10, 10, 10), type=int, help='container size along x, y and z axis'
     )
     parser.add_argument(
         '--enable-rotation', action='store_true', default=False, help='Whether agent can rotate boxes'
@@ -28,9 +28,6 @@ def get_args():
     )
     parser.add_argument(
         '--item-size-range', default=(2,2,2,5,5,5), type=tuple, help='the item size range, (min_width, min_length, min_height, max_width, max_length, max_height)'
-    )
-    parser.add_argument(
-        '--bin-size', default=(10, 10, 10), type=tuple, help='the size of bin, (width, length, height)'
     )
     parser.add_argument(
         '--use-cuda', action='store_true', default=False, help='whether to use cuda'
@@ -77,10 +74,42 @@ def get_args():
     parser.add_argument(
         '--device', default=0, type=int,  help='device id (default: 0)'
     )
+    parser.add_argument(
+        '--save_interval', default=10, type=int,  help='save interval, one save per n updates (default: 100)'
+    )
+    parser.add_argument(
+        '--log_interval', default=10, type=int,  help='log interval, one log per n updates (default: 10)'
+    )
+    parser.add_argument(
+        '--save_model', action='store_true', default=False,  help='whether to save training model'
+    )
+    parser.add_argument(
+        '--cases', default=100, type=int,  help='the number of sequences used for test (default 100)'
+    )
+    parser.add_argument(
+        '--pretrain', action='store_true', default=False,  help='load whole model'
+    )
+    parser.add_argument(
+        '--num_steps', default=5, type=int,  help='number of forward steps in A2C (default: 5)'
+    )
+    parser.add_argument(
+        '--enable_rotation', action='store_true', default=False,  help='whether agent can rotate box'
+    )
 
     args = parser.parse_args()
 
     args.device = "cuda:" + str(args.device) if args.use_cuda else "cpu"
+    args.bin_size = args.container_size
+    args.pallet_size = args.container_size[0]
+    args.channel = 4 # channels of CNN: 4 for hmap+next box, 5 for hmap nextbox+truemask
+
+    box_range = args.item_size_range
+    box_size_set = []
+    for i in range(box_range[0], box_range[3] + 1):
+        for j in range(box_range[1], box_range[4] + 1):
+            for k in range(box_range[2], box_range[5] + 1):
+                box_size_set.append((i, j, k))
+    args.box_size_set = box_size_set
 
     assert args.mode in ['train', 'test']
     if args.mode == 'train' and args.load_model:

@@ -68,7 +68,7 @@ def compare_test(env, args_list, times=5 ,args=None):
     result = dict()
     case_num = len(args_list)
     print("Case number: %d"%times)
-    nmodel = nnModel('../pretrained_models/default_cut_2.pt', config, args.device)
+    nmodel = nnModel('../pretrained_models/default_cut_2.pt',  args)
     for i in range(times):
         print('Case %d' % (i+1))
         obser = env.reset()
@@ -92,7 +92,7 @@ def compare_test(env, args_list, times=5 ,args=None):
 if __name__ == '__main__':
     args = get_args()
     env = gym.make(args.env_name, box_set=config.box_size_set,
-                   container_size=config.container_size, test=True,
+                   container_size=args.container_size, test=True,
                    data_name="../dataset/cut_2.pt", data_type=config.data_type)
 
     args_list = list()

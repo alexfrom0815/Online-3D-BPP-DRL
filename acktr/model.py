@@ -192,8 +192,8 @@ class NNBase(nn.Module):
         return x, hxs
 
 class CNNBase(NNBase):
-    def __init__(self, num_inputs, recurrent=False, hidden_size=512):
-        super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size)
+    def __init__(self, num_inputs, recurrent=False, hidden_size=512, args=None):
+        super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size, args)
 
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
                                constant_(x, 0), nn.init.calculate_gain('relu'))
@@ -265,9 +265,9 @@ class MLPBase(NNBase):
         return self.critic_linear(hidden_critic), hidden_actor, rnn_hxs
 
 class CNNPro(NNBase):
-    def __init__(self, num_inputs, recurrent=False, hidden_size=256):
+    def __init__(self, num_inputs, recurrent=False, hidden_size=256, args = None):
 
-        super(CNNPro, self).__init__(recurrent, num_inputs, hidden_size)
+        super(CNNPro, self).__init__(recurrent, num_inputs, hidden_size, args)
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.constant_(x, 0), nn.init.calculate_gain('relu'))
 
         self.share = nn.Sequential(
@@ -282,15 +282,15 @@ class CNNPro(NNBase):
             init_(nn.Conv2d(64, 64, 3, stride=1, padding=1)),
             nn.ReLU(),
         )
-        pred_len = config.container_size[0] * config.container_size[1]
-        if config.enable_rotation:
+        pred_len = args.container_size[0] * args.container_size[1]
+        if args.enable_rotation:
             pred_len = pred_len * 2
             
         self.mask = nn.Sequential(
             init_(nn.Conv2d(64, 8, 1, stride=1)),
             nn.ReLU(),
             Flatten(),
-            init_(nn.Linear(8*config.pallet_size*config.pallet_size, hidden_size)),
+            init_(nn.Linear(8*args.pallet_size*args.pallet_size, hidden_size)),
             nn.ReLU(),
             init_(nn.Linear(hidden_size, pred_len)),
             nn.ReLU(),
@@ -301,7 +301,7 @@ class CNNPro(NNBase):
             init_(nn.Conv2d(64, 8, 1, stride=1)),
             nn.ReLU(),
             Flatten(),
-            init_(nn.Linear(8*config.pallet_size*config.pallet_size, hidden_size)),
+            init_(nn.Linear(8*args.pallet_size*args.pallet_size, hidden_size)),
             nn.ReLU(),
         )
 

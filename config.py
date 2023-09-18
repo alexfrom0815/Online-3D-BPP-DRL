@@ -65,6 +65,7 @@ device = 0 # which device to use (default: 0)
 # other parameters
 recurrent_policy = False # use a recurrent policy
 use_linear_lr_decay = False # use a linear schedule on the learning rate
+
 use_proper_time_limits = False # compute returns taking into account time limits
 lr = 1e-6    # learning rate (default: 7e-4)
 eps = 1e-5 # RMSprop optimizer epsilon (default: 1e-5)

@@ -4,6 +4,7 @@ from acktr.reorder import ReorderTree
 import gym
 import copy
 import config
+from gym.envs.registration import register
 
 def run_sequence(nmodel, raw_env, preview_num, c_bound):
     env = copy.deepcopy(raw_env)
@@ -65,7 +66,15 @@ def unified_test(url, config):
     print('average time per item: %.4f'%(avg_time/avg_counter))
     print('----------------------------------------------')
 
+def registration_envs():
+    register(
+        id='Bpp-v0',                                  # Format should be xxx-v0, xxx-v1
+        entry_point='envs.bpp0:PackingGame',   # Expalined in envs/__init__.py
+    )
+
 if __name__ == '__main__':
+
+    registration_envs()
     config.cases = 100
     config.preview = 1
     unified_test('pretrained_models/default_cut_2.pt', config)

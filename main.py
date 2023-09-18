@@ -34,8 +34,6 @@ def main(args):
 
     if not config.test:
         config.data_type = args.item_seq
-    config.cuda = args.use_cuda and torch.cuda.is_available()
-    config.no_cuda = not config.cuda
 
     if config.test:
         test_model()
@@ -70,7 +68,7 @@ def train_model():
     except OSError:
         pass
     
-    if config.cuda and torch.cuda.is_available() and config.cuda_deterministic:
+    if args.use_cuda and torch.cuda.is_available() and config.cuda_deterministic:
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
 
@@ -80,7 +78,7 @@ def train_model():
     utils.cleanup_log_dir(eval_log_dir)
 
     torch.set_num_threads(1)
-    device = torch.device("cuda:" + str(config.device) if config.cuda else "cpu")
+    device = torch.device("cuda:" + str(config.device) if args.use_cuda else "cpu")
     envs = make_vec_envs(env_name, config.seed, args.num_processes, args.gamma, config.log_dir, device, False)
 
     if config.pretrain:

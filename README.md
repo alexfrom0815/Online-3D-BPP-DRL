@@ -2,22 +2,6 @@
 
 ![teaser](pictures/state_architecture.png)
 
-## Introduction
-> We are committed to continuously promoting the development of 3D packing technology.
->
-> The following are functions we developed：
->- [x] Online packing solver [[1](https://github.com/alexfrom0815/Online-3D-BPP-DRL), [2](https://github.com/alexfrom0815/Online-3D-BPP-PCT), [3](https://github.com/alexfrom0815/IR-BPP)]. 
->- [x] Online packing with lookahead [[1](https://github.com/alexfrom0815/Online-3D-BPP-DRL)].
->- [x] Packing stability solution [[2](https://github.com/alexfrom0815/Online-3D-BPP-PCT)].
->- [x] Packing in continuous domain [[2](https://github.com/alexfrom0815/Online-3D-BPP-PCT)].
->- [x] Custom-constrained packing [[2](https://github.com/alexfrom0815/Online-3D-BPP-PCT)].
->- [x] Online packing with buffer [[3](https://github.com/alexfrom0815/IR-BPP)].
->- [x] Irregular shape packing [[3](https://github.com/alexfrom0815/IR-BPP)].
->- [x] Packing with physical constraints  [[3](https://github.com/alexfrom0815/IR-BPP)].
->- [x] Basic tools for rendering, packing shape processing, and simulation scenarios [[4](https://github.com/alexfrom0815/Packing-Tools)].
- 
-> If you are interested in 3D packing, I strongly recommend you take a look. All kinds of questions and potential collaboration are welcome! 
-
 
 ## Online-3D-BPP-DRL
 

@@ -36,8 +36,7 @@ def make_env(env_id, seed, rank, log_dir, allow_early_resets):
         else:
             print()
             env = gym.make(env_id,
-                           _adjust_ratio = config.adjust_ratio, image_folder=config.image_folder,
-                           adjust =  config.adjust, enable_give_up = False, enable_rotation = config.enable_rotation,
+                           enable_rotation = config.enable_rotation,
                            box_set = config.box_size_set, container_size = config.container_size, test = False,
                            data_name = None, data_type = config.data_type)
 
@@ -94,8 +93,7 @@ def make_vec_envs(env_name,
             environment to get it.
         """
         env = gym.make(env_name,
-                       _adjust_ratio=config.adjust_ratio, image_folder=config.image_folder,
-                       adjust=config.adjust, enable_give_up=config.give_up, enable_rotation=config.enable_rotation,
+                       enable_rotation=config.enable_rotation,
                        box_set=config.box_size_set, container_size=config.container_size, test = False,
                        data_name = None)
         spaces = [env.observation_space, env.action_space]

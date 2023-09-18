@@ -26,7 +26,7 @@ def run_sequence(nmodel, raw_env, preview_num, c_bound):
         box_counter += 1
         default_counter += int(default)
 
-def unified_test(url, config):
+def unified_test(url, config, pruning_threshold):
     nmodel = nnModel(url, config)
     data_url = config.data_dir+config.data_name
     env = gym.make(config.env_name, _adjust_ratio=0, adjust=False,
@@ -44,7 +44,7 @@ def unified_test(url, config):
     times = config.cases
     ratios = []
     avg_ratio, avg_counter, avg_time, avg_drate = 0.0, 0.0, 0.0, 0.0
-    c_bound = config.pruning_threshold
+    c_bound = pruning_threshold
     for i in range(times):
         if i % 10 == 0:
             print('case', i+1)
@@ -74,9 +74,10 @@ def registration_envs():
 
 if __name__ == '__main__':
     registration_envs()
+    pruning_threshold = 0.5  # pruning_threshold (default: 0.5)
     config.cases = 100
     config.preview = 1
-    unified_test('pretrained_models/default_cut_2.pt', config)
+    unified_test('pretrained_models/default_cut_2.pt', config, pruning_threshold)
     # config.enable_rotation = True
     # unified_test('pretrained_models/rotation_cut_2.pt', config)
 

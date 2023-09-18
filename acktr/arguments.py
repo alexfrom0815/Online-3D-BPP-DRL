@@ -30,13 +30,43 @@ def get_args():
         '--use-cuda', action='store_true', default=False, help='whether to use cuda'
     )
     parser.add_argument(
+        '--tensorboard', action='store_true', default=False, help='whether use tensorboard to tracing trainning process'
+    )
+    parser.add_argument(
         '--preview', default=1, type=int, help='the item number agent knows (ignored when training)'
     )
     parser.add_argument(
         '--item-seq', default='depen', help='item sequence generators (ignored when testing), depen|sample|md'
     )
     parser.add_argument(
-        '--algorithm', default='acktr', help='algorithm used, acktr|ppo|a2c'
+        '--algorithm', default='acktr', type=str,  help='algorithm used, acktr|ppo|a2c'
+    )
+    parser.add_argument(
+        '--gamma', default=1.0, type=float,  help='discount factor for rewards (default: 1.0)'
+    )
+    parser.add_argument(
+        '--entropy_coef', default=0.01, type=float,  help='entropy term coefficient (default: 0.01)'
+    )
+    parser.add_argument(
+        '--value_loss_coef', default=0.5, type=float,  help='value loss coefficient (default: 0.5)'
+    )
+    parser.add_argument(
+        '--invalid_coef', default=2, type=float,  help='invalid action possibility term coefficient'
+    )
+    parser.add_argument(
+        '--hidden_size', default=256, type=int,  help='hidden layer cell number (default: 256)'
+    )
+    parser.add_argument(
+        '--learning_rate', default=1e-6, type=float,  help='learning rate for a2c (default: 1e-6)'
+    )
+    parser.add_argument(
+        '--eps', default=1e-5, type=float,  help='RMSprop optimizer epsilon (default: 1e-5)'
+    )
+    parser.add_argument(
+        '--alpha', default=0.99, type=float,  help='RMSprop optimizer apha (default: 0.99)'
+    )
+    parser.add_argument(
+        '--num_processes', default=16, type=int,  help='how many training CPU processes to use (default: 16)'
     )
     args = parser.parse_args()
 

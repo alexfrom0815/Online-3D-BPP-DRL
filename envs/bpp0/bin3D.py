@@ -18,16 +18,16 @@ class PackingGame(gym.Env):
 
         if not test and box_creator is None:
             assert box_set is not None
-            if data_type == 'sample':
+            if data_type == 'rs':
                 print('using random data')
                 self.box_creator = RandomBoxCreator(box_set)
-            elif data_type == 'depen':
+            elif data_type == 'cut1':
                 low = list(box_set[0])
                 up = list(box_set[-1])
                 low.extend(up)
                 print(low)
                 self.box_creator = CuttingBoxCreator(container_size, low, self.can_rotate)
-            elif data_type == 'md':
+            elif data_type == 'cut2':
                 print('using md data')
                 self.box_creator = MDlayerBoxCreator(container_size, [box_set[0][0], box_set[-1][0]])
             assert isinstance(self.box_creator, BoxCreator)

@@ -81,13 +81,13 @@ def train_model():
 
     torch.set_num_threads(1)
     device = torch.device("cuda:" + str(config.device) if config.cuda else "cpu")
-    envs = make_vec_envs(env_name, config.seed, config.num_processes, config.gamma, config.log_dir, device, False)
+    envs = make_vec_envs(env_name, config.seed, args.num_processes, args.gamma, config.log_dir, device, False)
 
     if config.pretrain:
         model_pretrained, ob_rms = torch.load(os.path.join(load_path, config.load_name))
         actor_critic = Policy(
             envs.observation_space.shape, envs.action_space,
-            base_kwargs={'recurrent': config.recurrent_policy, 'hidden_size': config.hidden_size})
+            base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size})
         load_dict = {k.replace('module.', ''): v for k, v in model_pretrained.items()}
         load_dict = {k.replace('add_bias.', ''): v for k, v in load_dict.items()}
         load_dict = {k.replace('_bias', 'bias'): v for k, v in load_dict.items()}
@@ -99,7 +99,7 @@ def train_model():
     else:
         actor_critic = Policy(
             envs.observation_space.shape, envs.action_space,
-            base_kwargs={'recurrent': config.recurrent_policy, 'hidden_size': config.hidden_size})
+            base_kwargs={'recurrent': False, 'hidden_size': args.hidden_size})
     print(actor_critic)
     print("Rotation:", config.enable_rotation)
     actor_critic.to(device)
@@ -113,29 +113,29 @@ def train_model():
     copyfile('./acktr/model.py', os.path.join(data_path, 'model.py'))
     copyfile('./acktr/algo/acktr_pipeline.py', os.path.join(data_path, 'acktr_pipeline.py'))
 
-    if args.algo == 'a2c':
+    if args.algorithm == 'a2c':
         agent = algo.ACKTR(actor_critic,
-                       config.value_loss_coef,
-                       config.entropy_coef,
-                       config.invalid_coef,
-                       config.lr,
-                       config.eps,
-                       config.alpha,
-                       config.max_grad_norm
+                       args.value_loss_coef,
+                       args.entropy_coef,
+                       args.invalid_coef,
+                       args.lr,
+                       args.eps,
+                       args.alpha,
+                       max_grad_norm = 0.5
                            )
-    elif args.algo == 'acktr':
+    elif args.algorithm == 'acktr':
         agent = algo.ACKTR(actor_critic,
-            config.value_loss_coef,
-            config.entropy_coef,
-            config.invalid_coef,
+            args.value_loss_coef,
+            args.entropy_coef,
+            args.invalid_coef,
             acktr=True)
 
     rollouts = RolloutStorage(config.num_steps,  # forward steps
-                              config.num_processes,  # agent processes
+                              args.num_processes,  # agent processes
                               envs.observation_space.shape,
                               envs.action_space,
                               actor_critic.recurrent_hidden_state_size,
-                              can_give_up=config.give_up,
+                              can_give_up=False,
                               enable_rotation=config.enable_rotation,
                               pallet_size=config.container_size[0])
 
@@ -157,22 +157,17 @@ def train_model():
     episode_ratio = deque(maxlen=10)
 
     start = time.time()
-    num_updates = int(config.num_env_steps) // config.num_steps // config.num_processes
+    num_updates = int(config.num_env_steps) // config.num_steps // args.num_processes
 
     if not os.path.exists('{}/{}/{}'.format(config.tbx_dir, env_name, custom)):
         os.makedirs('{}/{}/{}'.format(config.tbx_dir, env_name, custom))
-    if config.tensorboard:
+    if args.tensorboard:
         writer = SummaryWriter(logdir='{}/{}/{}'.format(config.tbx_dir, env_name, custom))
 
     j = 0
     index = 0
     while True:
         j += 1
-        if config.use_linear_lr_decay:
-            # decrease learning rate linearly
-            utils.update_linear_schedule(
-                agent.optimizer, j, num_updates,
-                agent.optimizer.lr if args.algo == "acktr" else config.lr)
 
         for step in range(config.num_steps):
             # Sample actions
@@ -205,7 +200,7 @@ def train_model():
                 rollouts.obs[-1], rollouts.recurrent_hidden_states[-1],
                 rollouts.masks[-1]).detach()
 
-        rollouts.compute_returns(next_value, False, config.gamma, 0.95, config.use_proper_time_limits)
+        rollouts.compute_returns(next_value, False, args.gamma, 0.95, False)
         # value_loss, action_loss, dist_entropy, prob_loss = agent.update(rollouts)
         value_loss, action_loss, dist_entropy, prob_loss, graph_loss = agent.update(rollouts)
 
@@ -220,12 +215,12 @@ def train_model():
 
         # print useful information of training
         if j % config.log_interval == 0 and len(episode_rewards) > 1:
-            total_num_steps = (j + 1) * config.num_processes * config.num_steps
+            total_num_steps = (j + 1) * args.num_processes * config.num_steps
             end = time.time()
             index += 1
             print(
                 "The algorithm is {}, the recurrent policy is {}\nThe env is {}, the version is {}".format(
-                    args.algo, config.recurrent_policy, env_name, custom))
+                    args.algorithm, False, env_name, custom))
             print(
                 "Updates {}, num timesteps {}, FPS {} \n"
                 "Last {} training episodes: mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}\n"
@@ -238,7 +233,7 @@ def train_model():
                             np.max(episode_rewards), dist_entropy, value_loss,
                             action_loss, np.mean(episode_ratio)))
 
-            if config.tensorboard:
+            if args.tensorboard:
                 writer.add_scalar('The average rewards', np.mean(episode_rewards), j)
                 writer.add_scalar("The mean ratio", np.mean(episode_ratio), j)
                 writer.add_scalar('Distribution entropy', dist_entropy, j)
@@ -251,7 +246,7 @@ def train_model():
                 and j % config.eval_interval == 0):
             ob_rms = utils.get_vec_normalize(envs).ob_rms
             evaluate(actor_critic, ob_rms, env_name, config.seed,
-                     config.num_processes, eval_log_dir, device)
+                     args.num_processes, eval_log_dir, device)
 
 
 def registration_envs():

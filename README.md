@@ -31,7 +31,7 @@ You can run 'python main.py --mode train --load-model False --use-cuda --item-se
 It will take about one day to get a model with satisfying performance.
 
 You can run 'python main.py --help' for some information of common parameters.
-There are many other parameters of our project in 'config.py', and all of them are given default values. You can change it if you like.
+There are many other parameters of our project in 'arguments.py', and all of them are given default values. You can change it if you like.
 ```
 
 For test:

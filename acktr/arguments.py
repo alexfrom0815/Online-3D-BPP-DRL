@@ -20,11 +20,11 @@ def get_args():
     )
     parser.add_argument(
         '--load-name', default='default_cut_2.pt', 
-        help='The name of trained model, default directory can be change in \'config.py\', you can put new trained model in it'
+        help='The name of trained model, you can put new trained model in it'
     )
     parser.add_argument(
         '--data-name', default='cut_2.pt',
-        help='The name of testing dataset, default directory can be change in \'config.py\''
+        help='The name of testing dataset'
     )
     parser.add_argument(
         '--item-size-range', default=(2,2,2,5,5,5), type=tuple, help='the item size range, (min_width, min_length, min_height, max_width, max_length, max_height)'
